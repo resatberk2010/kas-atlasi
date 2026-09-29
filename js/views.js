@@ -28,9 +28,10 @@
       calves: 'Kalf', core: 'Karın & Core', fullbody: 'Tüm Vücut', conditioning: 'Kondisyon', mobility: 'Esneme & Mobilite'
     },
     groupColor: {
-      chest: '#e0432a', back: '#2f6fde', shoulders: '#d98a0b', biceps: '#8b5cf6', triceps: '#c026d3',
-      forearms: '#64748b', quads: '#059669', 'glutes-hams': '#db2777', calves: '#0d9488',
-      core: '#ca8a04', fullbody: '#6b7280', conditioning: '#ea580c', mobility: '#0891b2'
+      // Plaka renklerinden türetilmiş, birbirinden ayırt edilebilir tonlar
+      chest: '#c8321f', back: '#2b56b8', shoulders: '#d9a300', biceps: '#2f7d4f', triceps: '#6a5a9c',
+      forearms: '#7a6f58', quads: '#1f7a73', 'glutes-hams': '#a3472f', calves: '#46637f',
+      core: '#b07d12', fullbody: '#4a504c', conditioning: '#d0561f', mobility: '#6f8f3a'
     },
     equip: {
       barbell: 'Barbell', dumbbell: 'Dambıl', machine: 'Makine', cable: 'Kablo', smith: 'Smith machine',
@@ -243,7 +244,7 @@
     var groupTiles = Object.keys(L.groups).map(function (g) {
       var n = F.exercises.filter(function (e) { return e.group === g; }).length;
       return '<a class="card tile" style="--g:' + L.groupColor[g] + '" href="#/hareketler?grup=' + g + '">' +
-        '<strong>' + esc(L.groups[g]) + '</strong><span>' + n + ' hareket</span></a>';
+        '<strong><i></i>' + esc(L.groups[g]) + '</strong><span class="t-n">' + n + '<small>hareket</small></span></a>';
     }).join('');
     var cardio = F.machines.filter(function (m) { return m.type === 'cardio'; }).length;
     return {
@@ -251,10 +252,9 @@
       html:
         '<section class="hero container">' +
           '<div class="hero-text">' +
-            '<p class="eyebrow">Türkçe fitness rehberi</p>' +
-            '<h1>Her hareket, her makine. <span>Tam olarak nereyi çalıştırdığıyla.</span></h1>' +
-            '<p class="lead">Hareketlerin adım adım nasıl yapıldığını, makinelerin nasıl ayarlandığını ve hangi kası ana, hangisini yardımcı olarak çalıştırdığını tek yerde bul. Başlamak için haritada bir kasa tıkla.</p>' +
-            '<div class="hero-cta"><a class="btn primary" href="#/hareketler">Hareketleri keşfet</a><a class="btn" href="#/makineler">Makine rehberi</a></div>' +
+            '<h1>O hareket<br><em>böyle yapılıyo,</em><br>kardeşim.</h1>' +
+            '<p class="lead">' + F.exercises.length + ' hareketin nasıl yapıldığını, ' + F.machines.length + ' aletin nasıl ayarlandığını ve hangi kası çalıştırdığını çizimleriyle anlattık. Vücut haritasında bir kasa dokun, o kası çalıştıran hareketleri gör.</p>' +
+            '<div class="hero-cta"><a class="btn primary" href="#/hareketler">Hareketlere göz at</a><a class="btn" href="#/makineler">Aletleri incele</a></div>' +
             '<dl class="stats">' +
               '<div><dt>' + F.exercises.length + '</dt><dd>hareket</dd></div>' +
               '<div><dt>' + (F.machines.length - cardio) + '</dt><dd>kuvvet makinesi</dd></div>' +
@@ -270,10 +270,10 @@
           grid(['beginner-full-body', 'hiit-beginner', 'couch-to-5k'].map(function (id) { return idx.pr[id]; }).filter(Boolean), function (p) { return progCard(p); }) + '</section>' +
         '<section class="container section"><div class="section-head"><h2>Antrenman araçları</h2><a href="#/araclar">Tümü →</a></div>' +
           '<div class="tiles">' +
-            '<a class="card tile" style="--g:#e0432a" href="#/araclar"><strong>⏱ HIIT zamanlayıcı</strong><span>Tabata, 30/30, EMOM hazır ayarları</span></a>' +
-            '<a class="card tile" style="--g:#059669" href="#/araclar"><strong>⏲ Dinlenme sayacı</strong><span>Setler arası sesli geri sayım</span></a>' +
-            '<a class="card tile" style="--g:#2f6fde" href="#/araclar"><strong>🏋 1RM hesaplayıcı</strong><span>Çalışma ağırlıklarını hesapla</span></a>' +
-            '<a class="card tile" style="--g:#d98a0b" href="#/araclar"><strong>⚖ Plaka hesaplayıcı</strong><span>Bara hangi plakalar takılır?</span></a>' +
+            '<a class="card tile" href="#/araclar"><strong>HIIT zamanlayıcı</strong><span>Tabata, 30/30 ve EMOM hazır ayarları</span></a>' +
+            '<a class="card tile" href="#/araclar"><strong>Dinlenme sayacı</strong><span>Setler arası sesli geri sayım</span></a>' +
+            '<a class="card tile" href="#/araclar"><strong>1RM hesaplayıcı</strong><span>Tek tekrarlık maksimumdan çalışma ağırlığı</span></a>' +
+            '<a class="card tile" href="#/araclar"><strong>Plaka hesaplayıcı</strong><span>Bara hangi plakalar takılır?</span></a>' +
           '</div></section>' +
         '<section class="container section"><div class="notice">' + ICON.alert +
           '<p><strong>Önce güvenlik:</strong> Yeni bir harekete hafif ağırlıkla başla ve tekniği oturt. Keskin, batan ya da eklem içinden gelen bir ağrı hissedersen hareketi bırak. Sakatlığın veya kronik bir rahatsızlığın varsa önce bir uzmana danış.</p>' +
@@ -702,7 +702,7 @@
           ? '<input class="kg" type="text" inputmode="decimal" placeholder="kg" aria-label="Kullanılan ağırlık (kg)" data-kg="' + k + '" value="' + esc(tr.kg[k] || '') + '">' : '';
         var restSec = F.parseRest ? F.parseRest(it.rest) : 0;
         var restCell = restSec
-          ? '<button type="button" class="rest-btn" data-rest-sec="' + restSec + '" data-rest-name="' + esc(e ? e.name : (it.label || '')) + '" title="Dinlenme sayacını başlat">⏱ ' + esc(it.rest) + '</button>'
+          ? '<button type="button" class="rest-btn" data-rest-sec="' + restSec + '" data-rest-name="' + esc(e ? e.name : (it.label || '')) + '" title="Dinlenme sayacını başlat"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M10 2h4"/></svg>' + esc(it.rest) + '</button>'
           : esc(it.rest || '—');
         return '<tr data-k="' + k + '"><td>' + itemName(it) + '</td><td>' + esc(dose(it)) + '</td><td>' + restCell + '</td><td class="track">' + boxes + kg + '</td></tr>';
       }).join('');
@@ -731,7 +731,7 @@
             '<div class="badges"><span class="tag accent">' + esc(L.goals[p.goals[0]]) + '</span><span class="tag">' + esc(L.level[p.level]) + '</span>' +
               '<span class="tag">Haftada ' + p.daysPerWeek + ' gün</span><span class="tag">' + p.weeks + ' hafta</span><span class="tag">~' + p.sessionMin + ' dk / seans</span>' +
               '<span class="tag">' + esc(p.equipment) + '</span></div>' +
-          '</div>' + (window.self === window.top ? '<div class="head-actions no-print"><button type="button" class="btn" data-print>🖨 Yazdır</button></div>' : '') + '</header>' +
+          '</div>' + (window.self === window.top ? '<div class="head-actions no-print"><button type="button" class="btn" data-print>Yazdır</button></div>' : '') + '</header>' +
           '<section class="card block" style="margin-bottom:14px"><h2>Haftalık düzen</h2><p>' + esc(p.schedule) + '</p></section>' +
           prog +
           '<h2 style="margin:26px 0 12px">Antrenman günleri</h2>' +
